@@ -11,8 +11,8 @@ using System.Security.Claims;
 
 namespace DocumentDB.AspNet.Identity
 {
-    public class UserStore<TUser> : IUserLoginStore<TUser>, IUserClaimStore<TUser>, IUserRoleStore<TUser>, IUserPasswordStore<TUser>, 
-        IUserSecurityStampStore<TUser>, IUserStore<TUser>, IUserEmailStore<TUser>, IUserLockoutStore<TUser, string>, 
+    public class UserStore<TUser> : IUserLoginStore<TUser>, IUserClaimStore<TUser>, IUserRoleStore<TUser>, IUserPasswordStore<TUser>,
+        IUserSecurityStampStore<TUser>, IUserStore<TUser>, IUserEmailStore<TUser>, IUserLockoutStore<TUser, string>,
         IUserTwoFactorStore<TUser, string>, IUserPhoneNumberStore<TUser>, IQueryableUserStore<TUser, String>
         where TUser : IdentityUser
     {
@@ -30,11 +30,7 @@ namespace DocumentDB.AspNet.Identity
 
         public UserStore(DocumentClient client, string database, string collection, bool ensureDatabaseAndCollection = false)
         {
-            if (client == null)
-            {
-                throw new ArgumentException("client");
-            }
-            _client = client;
+            _client = client ?? throw new ArgumentException("client");
 
             if (string.IsNullOrEmpty(database))
             {
@@ -83,7 +79,7 @@ namespace DocumentDB.AspNet.Identity
 
             if (!databaseEnsured)
             {
-                await _client.CreateDatabaseAsync(new Database {Id = _database});
+                await _client.CreateDatabaseAsync(new Database { Id = _database });
             }
         }
 
@@ -137,19 +133,13 @@ namespace DocumentDB.AspNet.Identity
             ThrowIfDisposed();
 
             if (user == null)
-            {
                 throw new ArgumentNullException("user");
-            }
 
             if (login == null)
-            {
                 throw new ArgumentNullException("login");
-            }
 
             if (!user.Logins.Any(x => x.LoginProvider == login.LoginProvider && x.ProviderKey == login.ProviderKey))
-            {
                 user.Logins.Add(login);
-            }
 
             await UpdateUserAsync(user);
         }
@@ -158,10 +148,8 @@ namespace DocumentDB.AspNet.Identity
         {
             ThrowIfDisposed();
 
-            if (login == null)
-            {
-                throw new ArgumentNullException("login");
-            }
+            if (login == null)            
+                throw new ArgumentNullException("login");            
 
             return (from user in await GetUsers(user => user.Logins != null)
                     from userLogin in user.Logins
@@ -173,10 +161,8 @@ namespace DocumentDB.AspNet.Identity
         {
             ThrowIfDisposed();
 
-            if (user == null)
-            {
-                throw new ArgumentNullException("user");
-            }
+            if (user == null)            
+                throw new ArgumentNullException("user");            
 
             return Task.FromResult(user.Logins.ToIList());
         }
@@ -185,18 +171,13 @@ namespace DocumentDB.AspNet.Identity
         {
             ThrowIfDisposed();
 
-            if (user == null)
-            {
-                throw new ArgumentNullException("user");
-            }
+            if (user == null)            
+                throw new ArgumentNullException("user");            
 
-            if (login == null)
-            {
-                throw new ArgumentNullException("login");
-            }
+            if (login == null)            
+                throw new ArgumentNullException("login");            
 
             user.Logins.Remove(u => u.LoginProvider == login.LoginProvider && u.ProviderKey == login.ProviderKey);
-
             return Task.FromResult(0);
         }
 
@@ -204,15 +185,11 @@ namespace DocumentDB.AspNet.Identity
         {
             ThrowIfDisposed();
 
-            if (user == null)
-            {
-                throw new ArgumentNullException("user");
-            }
+            if (user == null)            
+                throw new ArgumentNullException("user");            
 
-            if (string.IsNullOrEmpty(user.Id))
-            {
-                user.Id = Guid.NewGuid().ToString();
-            }
+            if (string.IsNullOrEmpty(user.Id))            
+                user.Id = Guid.NewGuid().ToString();           
 
             await _client.CreateDocumentAsync(_documentCollection, user);
         }
@@ -342,10 +319,8 @@ namespace DocumentDB.AspNet.Identity
         {
             ThrowIfDisposed();
 
-            if (user == null)
-            {
-                throw new ArgumentNullException("user");
-            }
+            if (user == null)            
+                throw new ArgumentNullException("user");           
 
             var result = user.Roles.ToIList();
 
@@ -698,10 +673,8 @@ namespace DocumentDB.AspNet.Identity
 
         private void ThrowIfDisposed()
         {
-            if (_disposed)
-            {
-                throw new ObjectDisposedException(GetType().Name);
-            }
+            if (_disposed)            
+                throw new ObjectDisposedException(GetType().Name);            
         }
 
         private async Task UpdateUserAsync(TUser user)
