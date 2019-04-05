@@ -2,7 +2,7 @@ DocumentDB.AspNet.Identity
 ==========================
 A DocumentDB provider for the new ASP.NET Identity framework.
 
-##Instalation
+## Installation
 To install the package via nuget use:
 
     Install-Package DocumentDB.AspNet.Identity -Pre
