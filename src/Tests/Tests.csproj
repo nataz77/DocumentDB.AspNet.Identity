@@ -71,12 +71,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DocumentDB.AspNet.Identity.csproj">
-      <Project>{53679491-3663-4575-b8a3-b01422334406}</Project>
-      <Name>DocumentDB.AspNet.Identity</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
